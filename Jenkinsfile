@@ -6,11 +6,13 @@ pipeline{
                 git branch: 'feature_declarative', url: 'https://github.com/pixelswapnil13/myopenmrs.git'
             }
         }
-        stage ('Build the code') {
-            steps{
-                sh script: 'mvn clean package'
-            }
+        stage('Build the code ans SonarQube Analysis'){
+        steps{ 
+            withSonarQubeEnv('SONAR_8.9'){
+                sh 'mvn clean package sonar:sonar'
+            }  
         }
+    }
         stage ('Running JUNIT') {
             steps{
                 junit '**/surefire-reports/*.xml'
